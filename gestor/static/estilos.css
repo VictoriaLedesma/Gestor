@@ -1,0 +1,39 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main {
+    flex: 1; /* Ocupa todo el espacio disponible entre header y footer */
+}
+
+.header {
+    background-color: #007bff;
+    padding: 10px 0;
+}
+
+.header a {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    margin-left: 20px;
+}
+
+.header .link-registro {
+    float: right;
+    margin-right: 20px;
+    font-size: 16px;
+}
+
+.footer {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+footer p {
+    margin: 0;
+}
