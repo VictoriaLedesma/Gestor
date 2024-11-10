@@ -3,6 +3,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
+    font-family: 'Montserrat', sans-serif;
 }
 
 main {
@@ -23,8 +24,8 @@ main {
 
 .header .link-registro {
     float: right;
-    margin-right: 20px;
-    font-size: 16px;
+    font-size: 30px;
+    margin-top: 10px;
 }
 
 .footer {
@@ -36,4 +37,8 @@ main {
 
 footer p {
     margin: 0;
+}
+
+.form-control{
+    background-color: #e7e7e7;
 }
