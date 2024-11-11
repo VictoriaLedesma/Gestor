@@ -15,7 +15,13 @@
             <a href="/">
                 <img src="{{ url_for('static', filename='img/gestor.png') }}" alt="gestor" />
             </a>
-            <a href="/registro" class="link-registro"> <strong>Registrarse</strong></a>
+            {% if request.endpoint == 'login' %}
+            <a href="{{ url_for('register') }}" class="link-registro"><strong>Registrarse</strong></a>
+        {% elif request.endpoint == 'register' %}
+            <a href="{{ url_for('login') }}" class="link-registro"><strong>Iniciar sesión</strong></a>
+        {% else %}
+            <a href="{{ url_for('logout') }}" class="link-registro"><strong>Cerrar sesión</strong></a>
+        {% endif %}
         </div>
     </header>
 
