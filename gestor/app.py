@@ -48,7 +48,7 @@ def register():
                 error = "El correo electrónico ya está registrado."
             else:
                 # Guardar el nuevo usuario
-                hashed_password = generate_password_hash(password, method='sha256')
+                hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
                 new_user = Usuario(nombre=nombre, email=email, password=hashed_password)
                 db.session.add(new_user)
                 db.session.commit()
@@ -70,7 +70,7 @@ def logout():
     return redirect(url_for('login'))
 
 # Configuración de la base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://usuario:contraseña@localhost/gestor'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/gestor'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'clave_secreta'
 
