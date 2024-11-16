@@ -1,96 +1,81 @@
-<!DOCTYPE html>
-<html lang="es" class="html-dashboard">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ge$tor</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
-</head>
-<body class="body-dashboard">
-    <header class="header-dashboard">
-        <div class="logo-dashboard">ge$tor</div>
-        <a href="{{ url_for('logout') }}" class="register-btn-dashboard">Cerrar Sesión</a>
-    </header>
+{% extends "base.html" %}
 
-    <main class="main-content-dashboard">
-        <div class="summary-card-dashboard">
-            <div class="summary-content-dashboard">
-                <div class="summary-left-dashboard">
-                    <h1 class="greeting-title-dashboard">Bienvenido, {{ usuario }}</h1>
-                    <p class="greeting-text-dashboard">Acá podrás visualizar un resumen<br>de tus movimientos mensuales</p>
-                </div>
-                <div class="summary-center-dashboard">
-                    <div class="available-amount-dashboard">Disponible: $123456</div>
-                    <div class="monthly-stats-dashboard">
-                        <div>Ingresos mensuales: $123456</div>
-                        <div>Egresos mensuales: $123456</div>
-                    </div>
-                </div>
-                <div class="summary-right-dashboard">
-                    <button class="btn-add-dashboard">Agregar gasto</button>
-                    <button class="btn-edit-dashboard">Editar ingresos</button>
-                </div>
+{% block title %}Ge$tor{% endblock %}
+
+{% block content %}
+<div class="summary-card-dashboard">
+    <div class="summary-content-dashboard">
+        <div class="summary-left-dashboard">
+            <h1 class="greeting-title-dashboard">Bienvenido, {{ usuario }}</h1>
+            <p class="greeting-text-dashboard">Acá podrás visualizar un resumen<br>de tus movimientos mensuales</p>
+        </div>
+        <div class="summary-center-dashboard">
+            <div class="available-amount-dashboard">Disponible: $123456</div>
+            <div class="monthly-stats-dashboard">
+                <div>Ingresos mensuales: $123456</div>
+                <div>Egresos mensuales: $123456</div>
+            </div>
+        </div>
+        <div class="summary-right-dashboard">
+            <button class="btn btn-primary-ingresos">Agregar gasto</button>
+            <button class="btn btn-secondary-ingresos">Editar ingresos</button>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid-dashboard mt-4">
+    <!-- Sección de últimos ingresos -->
+    <div class="transactions-section-dashboard">
+        <div class="section-header-dashboard d-flex justify-content-between align-items-center">
+            <h2 class="section-title-dashboard">Últimos ingresos</h2>
+            <a href="#" class="ver-todo-dashboard">Ver todo</a>
+        </div>
+        <div class="transactions-list-dashboard">
+            <div class="transaction-item-dashboard">
+                <span class="amount-income-dashboard">$1234</span>
+                <span class="badge bg-primary">Categoría</span>
+            </div>
+            <div class="transaction-item-dashboard">
+                <span class="amount-income-dashboard">$1234</span>
+                <span class="badge bg-secondary">Categoría</span>
+            </div>
+            <div class="transaction-item-dashboard">
+                <span class="amount-income-dashboard">$1234</span>
+                <span class="badge bg-success">Categoría</span>
             </div>
         </div>
 
-        <div class="dashboard-grid-dashboard">
-            <div class="transactions-section-dashboard">
-                <div class="section-header-dashboard">
-                    <h2 class="section-title-dashboard">Últimos ingresos</h2>
-                    <a href="#" class="ver-todo-dashboard">Ver todo</a>
-                </div>
-                <div class="transactions-list-dashboard">
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-income-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-1-dashboard">Categoría</span>
-                    </div>
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-income-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-2-dashboard">Categoría</span>
-                    </div>
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-income-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-3-dashboard">Categoría</span>
-                    </div>
-                </div>
-
-                <div class="section-header-dashboard">
-                    <h2 class="section-title-dashboard">Últimos egresos</h2>
-                    <a href="#" class="ver-todo-dashboard">Ver todo</a>
-                </div>
-                <div class="transactions-list-dashboard">
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-expense-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-1-dashboard">Categoría</span>
-                    </div>
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-expense-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-2-dashboard">Categoría</span>
-                    </div>
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-expense-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-3-dashboard">Categoría</span>
-                    </div>
-                </div>
+        <!-- Sección de últimos egresos -->
+        <div class="section-header-dashboard d-flex justify-content-between align-items-center mt-4">
+            <h2 class="section-title-dashboard">Últimos egresos</h2>
+            <a href="#" class="ver-todo-dashboard">Ver todo</a>
+        </div>
+        <div class="transactions-list-dashboard">
+            <div class="transaction-item-dashboard">
+                <span class="amount-expense-dashboard">$1234</span>
+                <span class="badge bg-primary">Categoría</span>
             </div>
-
-            <div class="chart-section-dashboard">
-                <div class="section-header-dashboard">
-                    <h2 class="section-title-dashboard">Egresos por categoría</h2>
-                    <a href="#" class="chart-toggle-dashboard">Porcentaje de ahorro</a>
-                </div>
-                <div class="chart-container-dashboard">
-                    <!-- Placeholder for matplotlib chart -->
-                    <div id="chart-placeholder-dashboard"></div>
-                </div>
+            <div class="transaction-item-dashboard">
+                <span class="amount-expense-dashboard">$1234</span>
+                <span class="badge bg-secondary">Categoría</span>
+            </div>
+            <div class="transaction-item-dashboard">
+                <span class="amount-expense-dashboard">$1234</span>
+                <span class="badge bg-danger">Categoría</span>
             </div>
         </div>
-    </main>
+    </div>
 
-    <footer class="footer-dashboard">
-        <div>Nombres</div>
-        <div>Analisis y Metodologia de Sistemas</div>
-        <div>2024</div>
-    </footer>
-</body>
-</html>
+    <!-- Sección de gráficos -->
+    <div class="chart-section-dashboard mt-4">
+        <div class="section-header-dashboard d-flex justify-content-between align-items-center">
+            <h2 class="section-title-dashboard">Egresos por categoría</h2>
+            <a href="#" class="chart-toggle-dashboard">Porcentaje de ahorro</a>
+        </div>
+        <div class="chart-container-dashboard">
+            <!-- Espacio reservado para un gráfico generado dinámicamente -->
+            <div id="chart-placeholder-dashboard"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

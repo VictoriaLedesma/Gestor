@@ -349,21 +349,35 @@ footer p {
     padding: 0.75rem 1.5rem;
     border-radius: 0.375rem;
     border: none;
-    color: white;
+    color: rgb(95, 83, 83);
     cursor: pointer;
     font-weight: 500;
 }
 
 .btn-primary-ingresos {
     background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+
+.btn-primary-ingresos:hover {
+    background-color: #004da1; 
+    color: white;
 }
 
 .btn-secondary-ingresos {
     background-color: var(--secondary-color);
+    color: #ffffff;
+}
+
+.btn-secondary-ingresos:hover {
+    background-color: #a646a5; 
+    border-color: #a646a5;
+    color: white;
 }
 
 .transactions-section-ingresos {
-    border: 1px solid #e5e7eb;
+    border: 1px solid #6d7e9e;
     border-radius: 0.5rem;
     overflow: hidden;
 }
@@ -383,7 +397,7 @@ footer p {
 .transactions-table-ingresos td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #7f95c0;
 }
 
 .transactions-table-ingresos th:last-child,

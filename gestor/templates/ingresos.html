@@ -1,86 +1,68 @@
-<!DOCTYPE html>
-<html lang="es" class="html-ingresos">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ge$tor</title>
-    <link rel="stylesheet" href="/gestor/static/estilos.css">
-</head>
-<body class="body-ingresos">
-    <header class="header-ingresos">
-        <div class="logo-ingresos">ge$tor</div>
-        <a href="#" class="register-btn-ingresos">Registro</a>
-    </header>
+{% extends "base.html" %}
 
-    <main class="main-content-ingresos">
-        <div class="summary-card-ingresos">
-            <div class="left-content-ingresos">
-                <h1 class="greeting-title-dashboard">Bienvenido, {{ usuario }}</h1>
-                <p class="description-ingresos">Acá podrás visualizar un resumen<br>de tus movimientos mensuales</p>
-            </div>
-            <div class="right-content-ingresos">
-                <div class="available-ingresos">Disponible: $123456</div>
-                <div class="monthly-stats-ingresos">
-                    <div>Ingresos mensuales: $123456</div>
-                    <div>Egresos mensuales: $123456</div>
-                </div>
-                <div class="button-container-ingresos">
-                    <button class="btn-ingresos btn-primary-ingresos">Agregar gasto</button>
-                    <button class="btn-ingresos btn-secondary-ingresos">Editar ingresos</button>
-                </div>
-            </div>
+{% block title %}Resumen de Ingresos{% endblock %}
+
+{% block content %}
+<div class="summary-card-ingresos">
+    <div class="left-content-ingresos">
+        <h1 class="greeting-title-dashboard">Bienvenido, {{ usuario }}</h1>
+        <p class="description-ingresos">Acá podrás visualizar un resumen<br>de tus movimientos mensuales</p>
+    </div>
+    <div class="right-content-ingresos">
+        <div class="available-ingresos">Disponible: $123456</div>
+        <div class="monthly-stats-ingresos">
+            <div>Ingresos mensuales: $123456</div>
+            <div>Egresos mensuales: $123456</div>
         </div>
-
-        <div class="transactions-section-ingresos">
-            <div class="transactions-header-ingresos">Últimos ingresos</div>
-            <table class="transactions-table-ingresos">
-                <thead>
-                    <tr>
-                        <th>Saldo</th>
-                        <th>Categoría</th>
-                        <th>Fecha</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="amount-ingresos">$1234</td>
-                        <td><span class="category-badge-ingresos category-1-ingresos">Categoría</span></td>
-                        <td>02/05/2024</td>
-                    </tr>
-                    <tr>
-                        <td class="amount-ingresos">$1234</td>
-                        <td><span class="category-badge-ingresos category-2-ingresos">Categoría</span></td>
-                        <td>02/05/2024</td>
-                    </tr>
-                    <tr>
-                        <td class="amount-ingresos">$1234</td>
-                        <td><span class="category-badge-ingresos category-3-ingresos">Categoría</span></td>
-                        <td>02/05/2024</td>
-                    </tr>
-                    <tr>
-                        <td class="amount-ingresos">$1234</td>
-                        <td><span class="category-badge-ingresos category-1-ingresos">Categoría</span></td>
-                        <td>02/05/2024</td>
-                    </tr>
-                    <tr>
-                        <td class="amount-ingresos">$1234</td>
-                        <td><span class="category-badge-ingresos category-2-ingresos">Categoría</span></td>
-                        <td>02/05/2024</td>
-                    </tr>
-                    <tr>
-                        <td class="amount-ingresos">$1234</td>
-                        <td><span class="category-badge-ingresos category-3-ingresos">Categoría</span></td>
-                        <td>02/05/2024</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="button-container-ingresos">
+            <button class="btn btn-primary">Agregar gasto</button>
+            <button class="btn btn-secondary">Editar ingresos</button>
         </div>
-    </main>
+    </div>
+</div>
 
-    <footer class="footer-ingresos">
-        <div>Nombres</div>
-        <div>Analisis y Metodologia de Sistemas</div>
-        <div>2024</div>
-    </footer>
-</body>
-</html>
+<div class="transactions-section-ingresos mt-4">
+    <div class="transactions-header-ingresos">Últimos ingresos</div>
+    <table class="table table-striped transactions-table-ingresos">
+        <thead>
+            <tr>
+                <th>Saldo</th>
+                <th>Categoría</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="amount-ingresos">$1234</td>
+                <td><span class="category-badge-ingresos category-1-ingresos">Categoría</span></td>
+                <td>02/05/2024</td>
+            </tr>
+            <tr>
+                <td class="amount-ingresos">$1234</td>
+                <td><span class="category-badge-ingresos category-2-ingresos">Categoría</span></td>
+                <td>02/05/2024</td>
+            </tr>
+            <tr>
+                <td class="amount-ingresos">$1234</td>
+                <td><span class="category-badge-ingresos category-3-ingresos">Categoría</span></td>
+                <td>02/05/2024</td>
+            </tr>
+            <tr>
+                <td class="amount-ingresos">$1234</td>
+                <td><span class="category-badge-ingresos category-1-ingresos">Categoría</span></td>
+                <td>02/05/2024</td>
+            </tr>
+            <tr>
+                <td class="amount-ingresos">$1234</td>
+                <td><span class="category-badge-ingresos category-2-ingresos">Categoría</span></td>
+                <td>02/05/2024</td>
+            </tr>
+            <tr>
+                <td class="amount-ingresos">$1234</td>
+                <td><span class="category-badge-ingresos category-3-ingresos">Categoría</span></td>
+                <td>02/05/2024</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
