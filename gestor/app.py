@@ -11,30 +11,32 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/gestor'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'clave_secreta'
 Bootstrap(app)
-@app.route('/inicio')
-def inicio():
-    if 'usuario' in session:
 
+# Variable global para controlar la visibilidad
+div_visible = False
+
+@app.route('/inicio', methods=['GET', 'POST'])
+def inicio():
+    global div_visible
+
+    if 'usuario' in session:
+        # Controlar la visibilidad del div
+        if request.method == 'POST':
+            div_visible = not div_visible
+
+        # Datos para el gráfico de barras
         categorias = ["Enero", "Febrero", "Marzo", "Abril"]
         ingresos = [3000, 4000, 3500, 5000]
         egresos = [2000, 2500, 3000, 2800]
 
-    # Crear barras
         barra_ingresos = go.Bar(name='Ingresos', x=categorias, y=ingresos, marker=dict(color='green'))
         barra_egresos = go.Bar(name='Egresos', x=categorias, y=egresos, marker=dict(color='red'))
 
-    # Configurar diseño
-        layout_barras = go.Layout(title='Ingresos y Egresos Mensuales', barmode='group')
+        fig_barras = go.Figure(data=[barra_ingresos, barra_egresos])
+        config = {'displayModeBar': False, 'responsive': True}
+        grafico_barras_html = pio.to_html(fig_barras, full_html=False, config=config)
 
-    # Crear figura
-        fig_barras = go.Figure(data=[barra_ingresos, barra_egresos], layout=layout_barras)
-        config = {'displayModeBar': False,'responsive': True  }
-
-    # Guardar el gráfico como HTML
-  # Guardar el gráfico como HTML sin la barra de herramientas
-        grafico_barras_html = pio.to_html(fig_barras, full_html=False,  config=config)
-
-
+        # Datos para el gráfico de torta
         etiquetas = ['Alquiler', 'Alimentos', 'Transporte', 'Otros']
         valores = [1200, 800, 400, 600]
 
@@ -42,13 +44,13 @@ def inicio():
         fig_torta.update_layout(title="Distribución de Egresos")
         grafico_torta_html = pio.to_html(fig_torta, full_html=False, config=config)
 
-        return render_template('inicio.html',grafico_barras_html=grafico_barras_html,grafico_torta_html=grafico_torta_html)
-
-
-        
-    
-    
-    
+        # Pasar la variable `div_visible` al template
+        return render_template(
+            'inicio.html',
+            grafico_barras_html=grafico_barras_html,
+            grafico_torta_html=grafico_torta_html,
+            div_visible=div_visible
+        )
 
     return redirect(url_for('login'))
 

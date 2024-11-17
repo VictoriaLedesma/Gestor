@@ -66,16 +66,21 @@
 
             <div class="chart-section-dashboard">
                 
-   
-                    <div class="grafico-container">
-                        {{ grafico_barras_html|safe }}
-                    </div>    
-              
-                    <div class="grafico-container">
-                        {{ grafico_torta_html|safe }}
+                <div class="section-header-dashboard" style="margin: 0 !important;">
+                    <h2 class="section-title-dashboard">Últimos egresos</h2>
+                    <form method="POST">
+                    <button type="submit" class="ver-todo-dashboard">Ver Distribucion de Ingresos</button>
+                    </form>
+                </div>
+                <div class="grafico-contenedor"> {{ grafico_barras_html|safe }}</div>
+                       
+                   
+                <div class="grafico-contenedor visually-hidden">  {{ grafico_torta_html|safe }}</div>
+      
+     
     
       
-                </div> 
+             
             </div>
         </div>
     </main>

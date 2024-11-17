@@ -193,6 +193,8 @@ footer p {
 .ver-todo-dashboard {
     color: var(--primary-color-dashboard);
     text-decoration: none;
+    border: 0;
+    background: none;
     font-size: 0.875rem;
 }
 
@@ -235,8 +237,6 @@ footer p {
 .chart-section-dashboard {
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
-    overflow: auto;
-    max-height: 500px;
     padding: 1.5rem;
 }
 
