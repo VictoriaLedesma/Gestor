@@ -3,8 +3,8 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from modelos.modelos import db, Usuario, Cuenta, TipoGasto, Transaccion
-import plotly.graph_objs as go
-import plotly.io as pio
+
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/gestor'
@@ -13,43 +13,60 @@ app.secret_key = 'clave_secreta'
 Bootstrap(app)
 
 # Variable global para controlar la visibilidad
-div_visible = False
 
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
-    global div_visible
+    import matplotlib.pyplot as plt
+    import io
+    import base64
+    
 
     if 'usuario' in session:
+
+
         # Controlar la visibilidad del div
-        if request.method == 'POST':
-            div_visible = not div_visible
 
         # Datos para el gráfico de barras
         categorias = ["Enero", "Febrero", "Marzo", "Abril"]
         ingresos = [3000, 4000, 3500, 5000]
         egresos = [2000, 2500, 3000, 2800]
 
-        barra_ingresos = go.Bar(name='Ingresos', x=categorias, y=ingresos, marker=dict(color='green'))
-        barra_egresos = go.Bar(name='Egresos', x=categorias, y=egresos, marker=dict(color='red'))
+        fig, ax = plt.subplots()
+        ax.bar(categorias, ingresos, label='Ingresos', color='green')
+        ax.bar(categorias, egresos, label='Egresos', color='red', alpha=0.7)
+        ax.legend()
 
-        fig_barras = go.Figure(data=[barra_ingresos, barra_egresos])
-        config = {'displayModeBar': False, 'responsive': True}
-        grafico_barras_html = pio.to_html(fig_barras, full_html=False, config=config)
+        # Convertir gráfico de barras a HTML
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+        grafico_barras_html = f'<img src="data:image/png;base64,{image_base64}" />'
+        buf.close()
+        plt.close(fig)
 
         # Datos para el gráfico de torta
         etiquetas = ['Alquiler', 'Alimentos', 'Transporte', 'Otros']
         valores = [1200, 800, 400, 600]
 
-        fig_torta = go.Figure(data=[go.Pie(labels=etiquetas, values=valores)])
-        fig_torta.update_layout(title="Distribución de Egresos")
-        grafico_torta_html = pio.to_html(fig_torta, full_html=False, config=config)
+        fig, ax = plt.subplots()
+        ax.pie(valores, labels=etiquetas, autopct='%1.1f%%')
+        ax.set_title("Distribución de Egresos")
+
+        # Convertir gráfico de torta a HTML
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+        grafico_torta_html = f'<img src="data:image/png;base64,{image_base64}" />'
+        buf.close()
+        plt.close(fig)
 
         # Pasar la variable `div_visible` al template
         return render_template(
             'inicio.html',
             grafico_barras_html=grafico_barras_html,
             grafico_torta_html=grafico_torta_html,
-            div_visible=div_visible
         )
 
     return redirect(url_for('login'))
@@ -170,6 +187,8 @@ if __name__ == '__main__':
 # INGRESOS
 from flask import Flask, render_template
 from datetime import datetime
+import io
+import base64
 
 app = Flask(__name__)
 

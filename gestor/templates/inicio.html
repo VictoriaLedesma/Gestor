@@ -1,88 +1,174 @@
-{% extends "base.html" %}
-{% block content %}
-    <main class="main-content-dashboard">
-        <div class="summary-card-dashboard">
-            <div class="summary-content-dashboard">
-                <div class="summary-left-dashboard">
-                    <h1 class="greeting-title-dashboard">¡Hola nombre!</h1>
-                    <p class="greeting-text-dashboard">Acá podrás visualizar un resumen<br>de tus movimientos mensuales</p>
-                </div>
-                <div class="summary-center-dashboard">
-                    <div class="available-amount-dashboard">Disponible: $123456</div>
-                    <div class="monthly-stats-dashboard">
-                        <div>Ingresos mensuales: $123456</div>
-                        <div>Egresos mensuales: $123456</div>
-                    </div>
-                </div>
-                <div class="summary-right-dashboard">
-                    <button class="btn-add-dashboard">Agregar gasto</button>
-                    <button class="btn-edit-dashboard">Editar ingresos</button>
-                </div>
-            </div>
+{% extends "base.html" %} {% block content %}
+<main class="main-content-dashboard">
+  <div class="summary-card-dashboard">
+    <div class="summary-content-dashboard">
+      <div class="summary-left-dashboard">
+        <h1 class="greeting-title-dashboard">¡Hola nombre!</h1>
+        <p class="greeting-text-dashboard">
+          Acá podrás visualizar un resumen<br />de tus movimientos mensuales
+        </p>
+      </div>
+      <div class="summary-center-dashboard">
+        <div class="available-amount-dashboard">Disponible: $123456</div>
+        <div class="monthly-stats-dashboard">
+          <div>Ingresos mensuales: $123456</div>
+          <div>Egresos mensuales: $123456</div>
         </div>
+      </div>
+      <div class="summary-right-dashboard">
+        <button id="btnAgregarGasto" class="btn-add-dashboard">
+          Agregar gasto
+        </button>
+        <button class="btn-edit-dashboard">Editar ingresos</button>
+      </div>
+    </div>
+  </div>
 
-        <div class="dashboard-grid-dashboard">
-            <div class="transactions-section-dashboard">
-                <div class="section-header-dashboard">
-                    <h2 class="section-title-dashboard">Últimos ingresos</h2>
-                    <a href="#" class="ver-todo-dashboard">Ver todo</a>
-                </div>
-                <div class="transactions-list-dashboard">
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-income-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-1-dashboard">Categoría</span>
-                    </div>
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-income-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-2-dashboard">Categoría</span>
-                    </div>
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-income-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-3-dashboard">Categoría</span>
-                    </div>
-                </div>
-
-                <div class="section-header-dashboard">
-                    <h2 class="section-title-dashboard">Últimos egresos</h2>
-                    <a href="#" class="ver-todo-dashboard">Ver todo</a>
-                </div>
-                <div class="transactions-list-dashboard">
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-expense-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-1-dashboard">Categoría</span>
-                    </div>
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-expense-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-2-dashboard">Categoría</span>
-                    </div>
-                    <div class="transaction-item-dashboard">
-                        <span class="amount-expense-dashboard">$1234</span>
-                        <span class="category-badge-dashboard category-3-dashboard">Categoría</span>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="chart-section-dashboard">
-                
-                <div class="section-header-dashboard" style="margin: 0 !important;">
-                    <h2 class="section-title-dashboard">Últimos egresos</h2>
-                    <form method="POST">
-                    <button type="submit" class="ver-todo-dashboard">Ver Distribucion de Ingresos</button>
-                    </form>
-                </div>
-                <div class="grafico-contenedor"> {{ grafico_barras_html|safe }}</div>
-                       
-                   
-                <div class="grafico-contenedor visually-hidden">  {{ grafico_torta_html|safe }}</div>
-      
-     
-    
-      
-             
-            </div>
+  <div class="dashboard-grid-dashboard">
+    <!-- Sección de Transacciones -->
+    <div class="transactions-section-dashboard">
+      <div class="section-header-dashboard">
+        <h2 class="section-title-dashboard">Últimos ingresos</h2>
+        <a href="#" class="ver-todo-dashboard">Ver todo</a>
+      </div>
+      <div class="transactions-list-dashboard">
+        <div class="transaction-item-dashboard">
+          <span class="amount-income-dashboard">$1234</span>
+          <span class="category-badge-dashboard category-1-dashboard"
+            >Categoría</span
+          >
         </div>
-    </main>
-    {% endblock %}
-  
+        <div class="transaction-item-dashboard">
+          <span class="amount-income-dashboard">$1234</span>
+          <span class="category-badge-dashboard category-2-dashboard"
+            >Categoría</span
+          >
+        </div>
+        <div class="transaction-item-dashboard">
+          <span class="amount-income-dashboard">$1234</span>
+          <span class="category-badge-dashboard category-3-dashboard"
+            >Categoría</span
+          >
+        </div>
+      </div>
+
+      <div class="section-header-dashboard">
+        <h2 class="section-title-dashboard">Últimos egresos</h2>
+        <a href="#" class="ver-todo-dashboard">Ver todo</a>
+      </div>
+      <div class="transactions-list-dashboard">
+        <div class="transaction-item-dashboard">
+          <span class="amount-expense-dashboard">$1234</span>
+          <span class="category-badge-dashboard category-1-dashboard"
+            >Categoría</span
+          >
+        </div>
+        <div class="transaction-item-dashboard">
+          <span class="amount-expense-dashboard">$1234</span>
+          <span class="category-badge-dashboard category-2-dashboard"
+            >Categoría</span
+          >
+        </div>
+        <div class="transaction-item-dashboard">
+          <span class="amount-expense-dashboard">$1234</span>
+          <span class="category-badge-dashboard category-3-dashboard"
+            >Categoría</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Gráficos -->
+    <div class="chart-section-dashboard">
+      <div class="section-header-dashboard">
+        <h2 class="section-title-dashboard">Últimos egresos</h2>
+        <form method="POST">
+          <button type="submit" id="cambiar-grafico" class="ver-todo-dashboard">
+            Ver Distribución de Ingresos
+          </button>
+        </form>
+      </div>
+    <div id="barra" class="grafico-barra">{{ grafico_barras_html|safe }}</div>
+    <div id="torta" class="grafico-torta" style="display:none;">{{ grafico_torta_html|safe }}</div>
+    </div>
+  </div>
+
+  <!-- Modal para Agregar Gasto -->
+  <div id="modalAgregarGasto" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Agregar gasto</h2>
+      <form id="formAgregarGasto">
+        <label for="monto">Monto:</label>
+        <input type="number" id="monto" name="monto" required />
+
+        <label for="categoria">Categoría:</label>
+        <select id="categoria" name="categoria" required>
+          <option value="">Seleccionar categoría</option>
+          <option value="comida">Comida</option>
+          <option value="transporte">Transporte</option>
+          <option value="entretenimiento">Entretenimiento</option>
+        </select>
+
+        <label for="descripcion">Descripción:</label>
+        <input type="text" id="descripcion" name="descripcion" required />
+
+        <input type="submit" value="Ingresar" />
+      </form>
+    </div>
+  </div>
+</main>
+{% endblock %} {% block scripts %}
+<script>
+  const graficoBarras = document.getElementById("barra");
+  const graficoTorta = document.getElementById("torta");
+  const grafico = document.getElementById("cambiar-grafico");
+  grafico.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (grafico.textContent === "Ver Distribución de Ingresos") {
+      graficoBarras.style.display = "none";
+      graficoTorta.style.display = "block";
+      grafico.textContent = "Ver Distribución de Egresos";
+    } else {
+      graficoBarras.style.display = "block";
+      graficoTorta.style.display = "none";
+      grafico.textContent = "Ver Distribución de Ingresos";
+    }
+  });
+
+  // Obtener el modal
+  const modal = document.getElementById("modalAgregarGasto");
+
+  // Obtener el botón que abre el modal
+  const btn = document.getElementById("btnAgregarGasto");
+
+  // Obtener el elemento <span> que cierra el modal
+  const span = document.querySelector(".close");
+
+  // Cuando el usuario hace clic en el botón, abrir el modal
+  btn.addEventListener("click", () => {
+    modal.style.display = "block";
+  });
+
+  // Cuando el usuario hace clic en <span> (x), cerrar el modal
+  span.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+
+  // Cuando el usuario hace clic fuera del modal, cerrarlo
+  window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+
+  // Manejar el envío del formulario
+  document
+    .getElementById("formAgregarGasto")
+    .addEventListener("submit", (e) => {
+      e.preventDefault();
+      console.log("Formulario enviado");
+      modal.style.display = "none";
+    });
+</script>
+{% endblock %}
