@@ -69,7 +69,7 @@ def register():
 @app.route("/")
 def home():
     if 'usuario' in session:
-        return render_template("home.html", usuario=session['usuario'])
+        return render_template("inicio.html", usuario=session['usuario'])
     return redirect(url_for('login'))
 
 @app.route("/logout")
@@ -152,6 +152,5 @@ def home():
         'transactions': transactions
     }
     return render_template('index.html', data=data)
-
 if __name__ == '__main__':
     app.run(debug=True)
