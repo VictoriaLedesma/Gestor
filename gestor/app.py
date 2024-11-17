@@ -10,6 +10,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/gestor'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'clave_secreta'
 
+
+@app.route('/ingresos')
+def ingresos():
+    if 'usuario' in session:
+        return render_template('ingresos.html', usuario=session['usuario'])
+    return redirect(url_for('login'))
+
+
+
 @app.route('/inicio')
 def inicio():
     if 'usuario' in session:
@@ -154,3 +163,6 @@ def home():
     return render_template('index.html', data=data)
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+# AGREGAR GASTOS
