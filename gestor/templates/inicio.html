@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html lang="es" class="html-dashboard">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ge$tor</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
-</head>
-<body class="body-dashboard">
-    <header class="header-dashboard">
-        <div class="logo-dashboard">ge$tor</div>
-        <a href="{{ url_for('logout') }}" class="register-btn-dashboard">Cerrar Sesión</a>
-    </header>
-
+{% extends "base.html" %}
+{% block content %}
     <main class="main-content-dashboard">
         <div class="summary-card-dashboard">
             <div class="summary-content-dashboard">
@@ -74,23 +62,22 @@
                 </div>
             </div>
 
+
+
             <div class="chart-section-dashboard">
-                <div class="section-header-dashboard">
-                    <h2 class="section-title-dashboard">Egresos por categoría</h2>
-                    <a href="#" class="chart-toggle-dashboard">Porcentaje de ahorro</a>
-                </div>
-                <div class="chart-container-dashboard">
-                    <!-- Placeholder for matplotlib chart -->
-                    <div id="chart-placeholder-dashboard"></div>
-                </div>
+                
+   
+                    <div class="grafico-container">
+                        {{ grafico_barras_html|safe }}
+                    </div>    
+              
+                    <div class="grafico-container">
+                        {{ grafico_torta_html|safe }}
+    
+      
+                </div> 
             </div>
         </div>
     </main>
-
-    <footer class="footer-dashboard">
-        <div>Nombres</div>
-        <div>Analisis y Metodologia de Sistemas</div>
-        <div>2024</div>
-    </footer>
-</body>
-</html>
+    {% endblock %}
+  

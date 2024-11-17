@@ -78,9 +78,15 @@ footer p {
 }
 
 .main-content-dashboard {
-    max-width: 1200px;
+    width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
+}
+
+.grafico-container {
+    margin: 20px auto;
+    width: 100%;
+    max-width: 800px;
 }
 
 .summary-card-dashboard {
@@ -229,6 +235,8 @@ footer p {
 .chart-section-dashboard {
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
+    overflow: auto;
+    max-height: 500px;
     padding: 1.5rem;
 }
 
@@ -365,6 +373,7 @@ footer p {
 .transactions-section-ingresos {
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
+    max-height: 500px;
     overflow: hidden;
 }
 
