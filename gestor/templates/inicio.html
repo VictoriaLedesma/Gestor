@@ -3,6 +3,7 @@
 {% block title %}Ge$tor{% endblock %}
 
 {% block content %}
+<main class="main-content-dashboard" >
 <div class="summary-card-dashboard">
     <div class="summary-content-dashboard">
         <div class="summary-left-dashboard">
@@ -72,17 +73,17 @@
     <!-- Grafico -->
     <div class="chart-section-dashboard">
         <div class="section-header-dashboard">
-            <h2 class="section-title-dashboard">Últimos egresos</h2>
-            <form method="POST">
-                <button type="submit" id="cambiar-grafico" class="ver-todo-dashboard">
-                    Ver Distribución de Ingresos
-                </button>
-            </form>
+          <h2 class="section-title-dashboard">Últimos egresos</h2>
+          <form method="POST">
+            <button type="submit" id="cambiar-grafico" class="ver-todo-dashboard">
+              Ver Distribución de Ingresos
+            </button>
+          </form>
         </div>
-        <div id="barra" class="grafico-barra">{{ grafico_barras_html|safe }}</div>
-        <div id="torta" class="grafico-torta" style="display:none;">{{ grafico_torta_html|safe }}</div>
+      <div id="barra" class="grafico-barra">{{ grafico_barras_html|safe }}</div>
+      <div id="torta" class="grafico-torta" style="display: none;">{{ grafico_torta_html|safe }}</div>
+      </div>
     </div>
-</div>
 
 
 <!-- Form Agregar Gasto -->
@@ -115,6 +116,7 @@
             <button type="submit" class="submit-button-expenses">Ingresar</button>
         </form>
 </div>
+
 </div>
 
 <!-- Form Editar Ingresos -->

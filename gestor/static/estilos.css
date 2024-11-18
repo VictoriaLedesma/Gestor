@@ -422,6 +422,22 @@ footer p {
     padding: 1.5rem;
 }
 
+.grafico-container {
+    margin: 20px auto;
+    width: 100%;
+    max-width: 800px;
+}
+.grafico-barra {
+    margin: 20px auto;
+    width: 100%;
+    max-width: 800px;
+}
+.grafico-torta {
+    margin: 20px auto;
+    width: 100%;
+    max-width: 800px;
+}
+
 .form-group-expenses {
     margin-bottom: 1rem;
 }

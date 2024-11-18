@@ -14,60 +14,59 @@ Bootstrap(app)
 
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
+    import matplotlib
+    matplotlib.use('Agg')  # Configura el backend a 'Agg'
     import matplotlib.pyplot as plt
+
     import io
     import base64
-    
 
-    if 'usuario' in session:
+    # Controlar la visibilidad del div
 
+    # Datos para el gráfico de barras
+    categorias = ["Enero", "Febrero", "Marzo", "Abril"]
+    ingresos = [3000, 4000, 3500, 5000]
+    egresos = [2000, 2500, 3000, 2800]
 
-        # Controlar la visibilidad del div
+    fig, ax = plt.subplots()
+    ax.bar(categorias, ingresos, label='Ingresos', color='green')
+    ax.bar(categorias, egresos, label='Egresos', color='red', alpha=0.7)
+    ax.legend()
 
-        # Datos para el gráfico de barras
-        categorias = ["Enero", "Febrero", "Marzo", "Abril"]
-        ingresos = [3000, 4000, 3500, 5000]
-        egresos = [2000, 2500, 3000, 2800]
+    # Convertir gráfico de barras a HTML
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+    grafico_barras_html = f'<img src="data:image/png;base64,{image_base64}" />'
+    buf.close()
+    plt.close(fig)
 
-        fig, ax = plt.subplots()
-        ax.bar(categorias, ingresos, label='Ingresos', color='green')
-        ax.bar(categorias, egresos, label='Egresos', color='red', alpha=0.7)
-        ax.legend()
+    # Datos para el gráfico de torta
+    etiquetas = ['Alquiler', 'Alimentos', 'Transporte', 'Otros']
+    valores = [1200, 800, 400, 600]
 
-        # Convertir gráfico de barras a HTML
-        buf = io.BytesIO()
-        plt.savefig(buf, format='png')
-        buf.seek(0)
-        image_base64 = base64.b64encode(buf.read()).decode('utf-8')
-        grafico_barras_html = f'<img src="data:image/png;base64,{image_base64}" />'
-        buf.close()
-        plt.close(fig)
+    fig, ax = plt.subplots()
+    ax.pie(valores, labels=etiquetas, autopct='%1.1f%%')
+    ax.set_title("Distribución de Egresos")
 
-        # Datos para el gráfico de torta
-        etiquetas = ['Alquiler', 'Alimentos', 'Transporte', 'Otros']
-        valores = [1200, 800, 400, 600]
+    # Convertir gráfico de torta a HTML
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+    grafico_torta_html = f'<img src="data:image/png;base64,{image_base64}" />'
+    buf.close()
+    plt.close(fig)
 
-        fig, ax = plt.subplots()
-        ax.pie(valores, labels=etiquetas, autopct='%1.1f%%')
-        ax.set_title("Distribución de Egresos")
+    # Pasar la variable div_visible al template
+    return render_template(
+        'inicio.html',
+        grafico_barras_html=grafico_barras_html,
+        grafico_torta_html=grafico_torta_html,
+    )
 
-        # Convertir gráfico de torta a HTML
-        buf = io.BytesIO()
-        plt.savefig(buf, format='png')
-        buf.seek(0)
-        image_base64 = base64.b64encode(buf.read()).decode('utf-8')
-        grafico_torta_html = f'<img src="data:image/png;base64,{image_base64}" />'
-        buf.close()
-        plt.close(fig)
-
-        # Pasar la variable div_visible al template
-        return render_template(
-            'inicio.html',
-            grafico_barras_html=grafico_barras_html,
-            grafico_torta_html=grafico_torta_html,
-        )
-
-    return redirect(url_for('login'))
+ 
 
 
 @app.route('/login', methods=['GET', 'POST'])
