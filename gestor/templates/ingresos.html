@@ -88,20 +88,20 @@
                 <div class="select-wrapper-expenses">
                     <select name="category" class="form-select-expenses" required>
                         <option value="" disabled selected>Seleccione una categoría</option>
-                        <option value="1">Categoría 1</option>
-                        <option value="2">Categoría 2</option>
-                        <option value="3">Categoría 3</option>
+                        {% for tipo in tipos_gasto %}
+                            <option value="{{ tipo.id_tipo }}">{{ tipo.nombre_tipo }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Descripción</strong></label>
-                <textarea name="description" class="form-textarea-expenses"
-                    placeholder="Ingrese una descripción"></textarea>
+                <textarea name="description" class="form-textarea-expenses" placeholder="Ingrese una descripción"></textarea>
             </div>
             <button type="submit" class="submit-button-expenses">Ingresar</button>
         </form>
-    </div>
+</div>
+
 </div>
 
 <!-- Form Editar Ingresos -->
@@ -131,4 +131,5 @@
         </form>
     </div>
 </div>
+</main>
 {% endblock %}
