@@ -12,7 +12,7 @@ Bootstrap(app)
 
 # Variable global para controlar la visibilidad
 
-@app.route('/inicio', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def inicio():
     import matplotlib
     matplotlib.use('Agg')  # Configura el backend a 'Agg'
