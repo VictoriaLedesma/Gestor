@@ -1,24 +1,27 @@
 {% extends "base.html" %}
 
-{% block title %}Ingresos{% endblock %}
+{% block title %}Ge$tor{% endblock %}
 
 {% block content %}
 <div class="summary-card-dashboard">
     <div class="summary-content-dashboard">
         <div class="summary-left-dashboard">
-            <h1 class="greeting-title-dashboard"><strong>¡Hola nombre!</strong></h1>
-            <p class="greeting-text-dashboard"><strong>Acá podrás visualizar un resumen<br>de tus movimientos mensuales</strong></p>
+            <h1 class="greeting-title-dashboard">Bienvenido, {{ usuario }}</h1>
+            <p class="greeting-text-dashboard"><strong>Acá podrás visualizar un resumen<br>de tus movimientos
+                    mensuales</strong></p>
         </div>
         <div class="summary-center-dashboard">
-            <div class="available-amount-dashboard"><strong>Disponible: $123456</strong></div>
+            <div class="available-amount-dashboard"><strong>Disponible: ${{ saldo_disponible }}</strong></div>
             <div class="monthly-stats-dashboard">
-                <div><strong>Ingresos mensuales: $123456</strong></div>
-                <div><strong>Egresos mensuales: $123456</strong></div>
+                <div><strong>Ingresos mensuales: ${{ ingresos }}</strong></div>
+                <div><strong>Egresos mensuales: ${{ egresos }}</strong></div>
             </div>
         </div>
         <div class="summary-right-dashboard">
-            <button class="btn btn-primary-ingresos" onclick="window.location.href='#modal-add-expense'">Agregar gasto</button>
-            <button class="btn btn-secondary-ingresos" onclick="window.location.href='#modal-edit-income'">Editar ingresos</button>
+            <button class="btn btn-primary-ingresos" onclick="window.location.href='#modal-add-expense'">Agregar
+                gasto</button>
+            <button class="btn btn-secondary-ingresos" onclick="window.location.href='#modal-edit-income'">Editar
+                ingresos</button>
         </div>
     </div>
 </div>
@@ -77,7 +80,7 @@
         </div>
         <form method="post" action="{{ url_for('home') }}" class="modal-form-expenses">
             <div class="form-group-expenses">
-                <label class="form-label-expenses"><strong>Monto</strong></label> 
+                <label class="form-label-expenses"><strong>Monto</strong></label>
                 <input type="number" name="amount" class="form-input-expenses" placeholder="Ingrese el monto" required>
             </div>
             <div class="form-group-expenses">
@@ -93,7 +96,8 @@
             </div>
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Descripción</strong></label>
-                <textarea name="description" class="form-textarea-expenses" placeholder="Ingrese una descripción"></textarea>
+                <textarea name="description" class="form-textarea-expenses"
+                    placeholder="Ingrese una descripción"></textarea>
             </div>
             <button type="submit" class="submit-button-expenses">Ingresar</button>
         </form>
@@ -127,12 +131,4 @@
         </form>
     </div>
 </div>
-{% endblock %}
-
-{% block footer %}
-<footer class="footer-ingresos">
-    <div>Nombres</div>
-    <div>Analisis y Metodologia de Sistemas</div>
-    <div>2024</div>
-</footer>
 {% endblock %}

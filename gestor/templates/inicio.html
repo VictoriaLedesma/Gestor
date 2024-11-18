@@ -6,19 +6,22 @@
 <div class="summary-card-dashboard">
     <div class="summary-content-dashboard">
         <div class="summary-left-dashboard">
-            <h1 class="greeting-title-dashboard">Bienvenido, {{ usuario }}</h1>
-            <p class="greeting-text-dashboard"><strong>Acá podrás visualizar un resumen<br>de tus movimientos mensuales</strong></p>
+            <h1 class="greeting-title-dashboard">Bienvenido, {{ usuario}}</h1>
+            <p class="greeting-text-dashboard"><strong>Acá podrás visualizar un resumen<br>de tus movimientos
+                    mensuales</strong></p>
         </div>
         <div class="summary-center-dashboard">
-            <div class="available-amount-dashboard"><strong>Disponible: $123456</strong></div>
+            <div class="available-amount-dashboard"><strong>Disponible: ${{ saldo_disponible }}</strong></div>
             <div class="monthly-stats-dashboard">
-                <div><strong>Ingresos mensuales: $123456</strong></div>
-                <div><strong>Egresos mensuales: $123456</strong></div>
+                <div><strong>Ingresos mensuales: ${{ ingresos }}</strong></div>
+                <div><strong>Egresos mensuales: ${{ egresos }}</strong></div>
             </div>
         </div>
         <div class="summary-right-dashboard">
-            <button class="btn btn-primary-ingresos" onclick="window.location.href='#modal-add-expense'">Agregar gasto</button>
-<button class="btn btn-secondary-ingresos" onclick="window.location.href='#modal-edit-income'">Editar ingresos</button>
+            <button class="btn btn-primary-ingresos" onclick="window.location.href='#modal-add-expense'">Agregar
+                gasto</button>
+            <button class="btn btn-secondary-ingresos" onclick="window.location.href='#modal-edit-income'">Editar
+                ingresos</button>
         </div>
     </div>
 </div>
@@ -66,18 +69,21 @@
         </div>
     </div>
 
-    <!-- Sección de gráficos -->
-    <div class="chart-section-dashboard mt-4">
-        <div class="section-header-dashboard d-flex justify-content-between align-items-center">
-            <h2 class="section-title-dashboard">Egresos por categoría</h2>
-            <a href="#" class="chart-toggle-dashboard">Porcentaje de ahorro</a>
+    <!-- Grafico -->
+    <div class="chart-section-dashboard">
+        <div class="section-header-dashboard">
+            <h2 class="section-title-dashboard">Últimos egresos</h2>
+            <form method="POST">
+                <button type="submit" id="cambiar-grafico" class="ver-todo-dashboard">
+                    Ver Distribución de Ingresos
+                </button>
+            </form>
         </div>
-        <div class="chart-container-dashboard">
-            <!-- Espacio reservado para un gráfico generado dinámicamente -->
-            <div id="chart-placeholder-dashboard"></div>
-        </div>
+        <div id="barra" class="grafico-barra">{{ grafico_barras_html|safe }}</div>
+        <div id="torta" class="grafico-torta" style="display:none;">{{ grafico_torta_html|safe }}</div>
     </div>
 </div>
+
 
 <!-- Form Agregar Gasto -->
 <div class="modal-expenses" id="modal-add-expense">
@@ -88,7 +94,7 @@
         </div>
         <form method="post" action="{{ url_for('home') }}" class="modal-form-expenses">
             <div class="form-group-expenses">
-                <label class="form-label-expenses"><strong>Monto</strong></label> 
+                <label class="form-label-expenses"><strong>Monto</strong></label>
                 <input type="number" name="amount" class="form-input-expenses" placeholder="Ingrese el monto" required>
             </div>
             <div class="form-group-expenses">
@@ -96,9 +102,9 @@
                 <div class="select-wrapper-expenses">
                     <select name="category" class="form-select-expenses" required>
                         <option value="" disabled selected>Seleccione una categoría</option>
-                        <option value="1">Categoría 1</option>
-                        <option value="2">Categoría 2</option>
-                        <option value="3">Categoría 3</option>
+                        {% for tipo in tipos_gasto %}
+                            <option value="{{ tipo.id_tipo }}">{{ tipo.nombre_tipo }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -108,7 +114,7 @@
             </div>
             <button type="submit" class="submit-button-expenses">Ingresar</button>
         </form>
-    </div>
+</div>
 </div>
 
 <!-- Form Editar Ingresos -->
@@ -138,5 +144,60 @@
         </form>
     </div>
 </div>
+</main>
 
+{% endblock %} {% block scripts %}
+
+<script>
+    const graficoBarras = document.getElementById("barra");
+    const graficoTorta = document.getElementById("torta");
+    const grafico = document.getElementById("cambiar-grafico");
+    grafico.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (grafico.textContent === "Ver Distribución de Ingresos") {
+            graficoBarras.style.display = "none";
+            graficoTorta.style.display = "block";
+            grafico.textContent = "Ver Distribución de Egresos";
+        } else {
+            graficoBarras.style.display = "block";
+            graficoTorta.style.display = "none";
+            grafico.textContent = "Ver Distribución de Ingresos";
+        }
+    });
+
+    // Obtener el modal
+    const modal = document.getElementById("modalAgregarGasto");
+
+    // Obtener el botón que abre el modal
+    const btn = document.getElementById("btnAgregarGasto");
+
+    // Obtener el elemento <span> que cierra el modal
+    const span = document.querySelector(".close");
+
+    // Cuando el usuario hace clic en el botón, abrir el modal
+    btn.addEventListener("click", () => {
+        modal.style.display = "block";
+    });
+
+    // Cuando el usuario hace clic en <span> (x), cerrar el modal
+    span.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // Cuando el usuario hace clic fuera del modal, cerrarlo
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    // Manejar el envío del formulario
+    document
+        .getElementById("formAgregarGasto")
+        .addEventListener("submit", (e) => {
+            e.preventDefault();
+            console.log("Formulario enviado");
+            modal.style.display = "none";
+        });
+</script>
 {% endblock %}

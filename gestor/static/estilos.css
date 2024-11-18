@@ -484,6 +484,7 @@ footer p {
     background-color: #3b55d9;
 }
 
+
 /* Media Queries para Responsividad */
 @media (max-width: 768px) {
     .summary-content-dashboard, .summary-content-ingresos {
