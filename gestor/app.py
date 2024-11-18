@@ -14,10 +14,12 @@ Bootstrap(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def inicio():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    
     import matplotlib
-    matplotlib.use('Agg')  # Configura el backend a 'Agg'
+    matplotlib.use('Agg') 
     import matplotlib.pyplot as plt
-
     import io
     import base64
 
@@ -59,13 +61,20 @@ def inicio():
     buf.close()
     plt.close(fig)
 
+    tipos_gastos = obtener_categorias()
+
     # Pasar la variable div_visible al template
     return render_template(
         'inicio.html',
+        usuario=session['usuario'],
         grafico_barras_html=grafico_barras_html,
         grafico_torta_html=grafico_torta_html,
+        tipos_gastos=tipos_gastos
     )
 
+def obtener_categorias():
+    categorias = TipoGasto.query.all()
+    return categorias
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -116,16 +125,10 @@ def register():
     
     return render_template('registro.html', error=error)
 
-@app.route("/")
-def home():
-    if 'usuario' in session:
-        return render_template("inicio.html", usuario=session['usuario'])
-    return redirect(url_for('login'))
-
-
-
 @app.route('/home', methods=['GET', 'POST'])
 def home_dashboard():
+
+
     if request.method == 'POST':
         # Recuperamos los datos del formulario
         monto = request.form['amount']
@@ -138,26 +141,9 @@ def home_dashboard():
             
             # Obtener la cuenta y tipo de gasto asociados al usuario
             cuenta = Cuenta.query.filter_by(id_usuario=usuario_id).first()
-            tipo_gasto = TipoGasto.query.filter_by(id_tipo=categoria).first()
-            tipos_gasto = TipoGasto.query.all()
-            
-            if cuenta and tipo_gasto:
-                # Crear una nueva transacción
-                nueva_transaccion = Transaccion(
-                    id_usuario=usuario_id,
-                    id_cuenta=cuenta.id_cuenta,
-                    id_tipo=tipo_gasto.id_tipo,
-                    descripcion=descripcion,
-                    monto=monto,
-                    tipo='gasto'  # O 'ingreso' según corresponda
-                )
-                
-                # Guardamos la transacción en la base de datos
-                db.session.add(nueva_transaccion)
-                db.session.commit()
-                
-                flash('Gasto agregado correctamente.')
-                return redirect(url_for('home_dashboard'))
+            #tipo_gasto = TipoGasto.query.filter_by(id_tipo=categoria).first()
+            #tipos_gasto = TipoGasto.query.all()
+        
     
     # Recuperamos el saldo y otros datos para mostrar en la plantilla
     usuario = Usuario.query.filter_by(id_usuario=session.get('usuario_id')).first()
@@ -169,7 +155,7 @@ def home_dashboard():
     ingresos = sum(t.monto for t in transacciones if t.tipo == 'ingreso')
     egresos = sum(t.monto for t in transacciones if t.tipo == 'gasto')
     
-    return render_template('inicio.html', usuario=usuario.nombre, saldo_disponible=saldo_disponible, ingresos=ingresos, egresos=egresos, tipos_gasto=tipos_gasto)
+    return render_template('inicio.html', usuario=usuario.nombre, saldo_disponible=saldo_disponible, ingresos=ingresos, egresos=egresos, tipos_gasto=tipos_gastos)
 
 
 
@@ -248,17 +234,6 @@ expense_transactions = [
     {"amount": 1234, "category": "Categoría", "date": "02/05/2024"},
 ]
 
-@app.route('/')
-def home():
-    data = {
-        'available': 123456,
-        'monthly_income': 123456,
-        'monthly_expenses': 123456,
-        'income_transactions': income_transactions,
-        'expense_transactions': expense_transactions
-    }
-    return render_template('index.html', data=data)
-
 if __name__ == '__main__':
     app.run(debug=True)
 
@@ -280,16 +255,6 @@ transactions = [
     {"amount": 1234, "category": "Categoría", "date": "02/05/2024"},
     {"amount": 1234, "category": "Categoría", "date": "02/05/2024"},
 ]
-
-@app.route('/')
-def home():
-    data = {
-        'available': 123456,
-        'monthly_income': 123456,
-        'monthly_expenses': 123456,
-        'transactions': transactions
-    }
-    return render_template('index.html', data=data)
 
 if __name__ == '__main__':
     app.run(debug=True) 

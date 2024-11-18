@@ -7,7 +7,7 @@
 <div class="summary-card-dashboard">
     <div class="summary-content-dashboard">
         <div class="summary-left-dashboard">
-            <h1 class="greeting-title-dashboard">Bienvenido, {{ usuario}}</h1>
+            <h1 class="greeting-title-dashboard">Bienvenido, {{usuario}}</h1>
             <p class="greeting-text-dashboard"><strong>Acá podrás visualizar un resumen<br>de tus movimientos
                     mensuales</strong></p>
         </div>
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="summary-right-dashboard">
-            <button class="btn btn-primary-ingresos" onclick="window.location.href='#modal-add-expense'">Agregar
+            <button class="btn btn-primary-ingresos" id="btnAgregarGasto" onclick="window.location.href='#modal-add-expense'">Agregar
                 gasto</button>
             <button class="btn btn-secondary-ingresos" onclick="window.location.href='#modal-edit-income'">Agregar
                 ingresos</button>
@@ -93,7 +93,7 @@
             <h2 class="modal-title-expenses">Agregar gasto</h2>
             <a href="#" class="modal-close-expenses">✕</a>
         </div>
-        <form method="post" action="{{ url_for('home') }}" class="modal-form-expenses">
+        <form method="post" action="{{ url_for('inicio') }}" class="modal-form-expenses">
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Monto</strong></label>
                 <input type="number" name="amount" class="form-input-expenses" placeholder="Ingrese el monto" required>
@@ -103,7 +103,7 @@
                 <div class="select-wrapper-expenses">
                     <select name="category" class="form-select-expenses" required>
                         <option value="" disabled selected>Seleccione una categoría</option>
-                        {% for tipo in tipos_gasto %}
+                        {% for tipo in tipos_gastos %}
                             <option value="{{ tipo.id_tipo }}">{{ tipo.nombre_tipo }}</option>
                         {% endfor %}
                     </select>
@@ -126,7 +126,7 @@
             <h2 class="modal-title-expenses">Editar ingresos</h2>
             <a href="#" class="modal-close-expenses">✕</a>
         </div>
-        <form method="post" action="{{ url_for('home') }}" class="modal-form-expenses">
+        <form method="post" action="{{ url_for('inicio') }}" class="modal-form-expenses">
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Monto</strong></label>
                 <input type="number" name="amount" class="form-input-expenses" placeholder="Ingrese el monto" required>
@@ -173,17 +173,13 @@
     // Obtener el botón que abre el modal
     const btn = document.getElementById("btnAgregarGasto");
 
-    // Obtener el elemento <span> que cierra el modal
-    const span = document.querySelector(".close");
 
     // Cuando el usuario hace clic en el botón, abrir el modal
     btn.addEventListener("click", () => {
         modal.style.display = "block";
-    });
-
-    // Cuando el usuario hace clic en <span> (x), cerrar el modal
-    span.addEventListener("click", () => {
+        document.querySelector(".close").addEventListener("click", () => {
         modal.style.display = "none";
+    });
     });
 
     // Cuando el usuario hace clic fuera del modal, cerrarlo
