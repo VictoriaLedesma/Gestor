@@ -66,8 +66,6 @@ def inicio():
         grafico_torta_html=grafico_torta_html,
     )
 
- 
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
