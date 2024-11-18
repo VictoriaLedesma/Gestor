@@ -37,36 +37,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td class="amount-ingresos">$1234</td>
-                <td><span class="category-badge-ingresos category-1-ingresos">Categoría</span></td>
-                <td>02/05/2024</td>
-            </tr>
-            <tr>
-                <td class="amount-ingresos">$1234</td>
-                <td><span class="category-badge-ingresos category-2-ingresos">Categoría</span></td>
-                <td>02/05/2024</td>
-            </tr>
-            <tr>
-                <td class="amount-ingresos">$1234</td>
-                <td><span class="category-badge-ingresos category-3-ingresos">Categoría</span></td>
-                <td>02/05/2024</td>
-            </tr>
-            <tr>
-                <td class="amount-ingresos">$1234</td>
-                <td><span class="category-badge-ingresos category-1-ingresos">Categoría</span></td>
-                <td>02/05/2024</td>
-            </tr>
-            <tr>
-                <td class="amount-ingresos">$1234</td>
-                <td><span class="category-badge-ingresos category-2-ingresos">Categoría</span></td>
-                <td>02/05/2024</td>
-            </tr>
-            <tr>
-                <td class="amount-ingresos">$1234</td>
-                <td><span class="category-badge-ingresos category-3-ingresos">Categoría</span></td>
-                <td>02/05/2024</td>
-            </tr>
+           
+        {% for ingreso in ingresos_list %}
+        <tr>
+            <td class="amount-ingresos">${{ ingreso.amount }}</td>
+            <td><span class="category-badge-ingresos category-{{ ingreso.category }}">{{ ingreso.category_name }}</span></td>
+            <td>{{ ingreso.date }}</td>
+        </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>
@@ -78,7 +56,7 @@
             <h2 class="modal-title-expenses">Agregar gasto</h2>
             <a href="#" class="modal-close-expenses">✕</a>
         </div>
-        <form method="post" action="{{ url_for('home') }}" class="modal-form-expenses">
+        <form method="post" action="" class="modal-form-expenses">
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Monto</strong></label>
                 <input type="number" name="amount" class="form-input-expenses" placeholder="Ingrese el monto" required>
@@ -88,20 +66,20 @@
                 <div class="select-wrapper-expenses">
                     <select name="category" class="form-select-expenses" required>
                         <option value="" disabled selected>Seleccione una categoría</option>
-                        {% for tipo in tipos_gasto %}
-                            <option value="{{ tipo.id_tipo }}">{{ tipo.nombre_tipo }}</option>
-                        {% endfor %}
+                        <option value="1">Categoría 1</option>
+                        <option value="2">Categoría 2</option>
+                        <option value="3">Categoría 3</option>
                     </select>
                 </div>
             </div>
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Descripción</strong></label>
-                <textarea name="description" class="form-textarea-expenses" placeholder="Ingrese una descripción"></textarea>
+                <textarea name="description" class="form-textarea-expenses"
+                    placeholder="Ingrese una descripción"></textarea>
             </div>
             <button type="submit" class="submit-button-expenses">Ingresar</button>
         </form>
-</div>
-
+    </div>
 </div>
 
 <!-- Form Editar Ingresos -->
@@ -111,7 +89,7 @@
             <h2 class="modal-title-expenses">Editar ingresos</h2>
             <a href="#" class="modal-close-expenses">✕</a>
         </div>
-        <form method="post" action="{{ url_for('home') }}" class="modal-form-expenses">
+        <form method="post" action="" class="modal-form-expenses">
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Monto</strong></label>
                 <input type="number" name="amount" class="form-input-expenses" placeholder="Ingrese el monto" required>
@@ -131,5 +109,4 @@
         </form>
     </div>
 </div>
-</main>
 {% endblock %}
