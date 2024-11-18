@@ -89,6 +89,7 @@ def login():
         if user and check_password_hash(user.password, password):
             # Autenticación exitosa
             session['usuario'] = user.nombre
+            session['usuario_id'] = user.id_usuario
             return redirect(url_for('inicio'))
         else:
             error = "Correo o contraseña incorrectos."
@@ -157,21 +158,18 @@ def home_dashboard():
     
     return render_template('inicio.html', usuario=usuario.nombre, saldo_disponible=saldo_disponible, ingresos=ingresos, egresos=egresos, tipos_gasto=tipos_gastos)
 
-
-
-
 @app.route('/ingresos')
 def ingresos():
     # Aquí puedes manejar la lógica relacionada con ingresos
     return render_template('ingresos.html')
 
-@app.route('/agregar_gasto', methods=['GET', 'POST'])
+@app.route('/agregar_gasto', methods=['POST'])
 def agregar_gasto():
     if request.method == 'POST':
         descripcion = request.form['descripcion']
         monto = request.form['monto']
-        tipo_gasto = request.form['tipo_gasto']
-        fecha = request.form['fecha']
+        tipo_gasto = request.form['categoria']
+        #fecha = request.form['fecha']
         
         # Asegúrate de que el usuario esté logueado
         if 'usuario_id' in session:
@@ -183,7 +181,6 @@ def agregar_gasto():
                 descripcion=descripcion,
                 monto=monto,
                 tipo='gasto',  # O ajusta según corresponda
-                fecha=fecha,
                 id_tipo=tipo_gasto  # Asegúrate de que tipo_gasto sea el ID de un tipo válido
             )
             
@@ -193,9 +190,30 @@ def agregar_gasto():
             flash('Gasto agregado correctamente.')
             return redirect(url_for('inicio'))  # Redirigir al inicio después de agregar el gasto
     
-    # Si el método es GET, solo mostrar el formulario
-    return render_template('agregar_gasto.html')
+    # Si el método es GET, solo mostrar el formulario (no hay tal formulario, es un modal, revisar)
+    #return render_template('agregar_gasto.html')
 
+@app.route('/agregar_ingreso', methods=['POST'])
+def agregar_ingreso():
+    if request.method == 'POST':
+        monto = request.form['monto']
+        
+        # Asegúrate de que el usuario esté logueado
+        if 'usuario_id' in session:
+            usuario_id = session['usuario_id']
+            
+            # Crear la nueva transacción de gasto
+            nueva_transaccion = Transaccion(
+                id_usuario=usuario_id,
+                monto=monto,
+                tipo='ingreso',  # O ajusta según corresponda
+            )
+            
+            db.session.add(nueva_transaccion)
+            db.session.commit()
+            
+            flash('Ingreso agregado correctamente.')
+            return redirect(url_for('inicio'))  # Redirigir al inicio después de agregar el gasto
 
 @app.route("/logout")
 def logout():
