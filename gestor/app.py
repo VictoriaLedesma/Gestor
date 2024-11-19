@@ -18,7 +18,7 @@ Bootstrap(app)
 def inicio():
     if "usuario" not in session:
         return redirect(url_for("login"))
-
+    usuario_id = session["usuario_id"]
     import matplotlib
 
     matplotlib.use("Agg")
@@ -26,17 +26,43 @@ def inicio():
     import io
     import base64
 
-    # Datos para el gráfico de barras
-    categorias = ["Enero", "Febrero", "Marzo", "Abril"]
-    ingresos = [3000, 4000, 3500, 5000]
-    egresos = [2000, 2500, 3000, 2800]
 
+    mes=datetime.datetime.now().month - 1 
+    
+    meses = [
+        "enero", "febrero", "marzo", "abril", "mayo", "junio",
+        "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+    ]
+    # Datos para el gráfico de barras
+    totalIngreso = 0
+    totalEgreso = 0
+    categorias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+    ingresos = [0] * len(categorias)
+    egresos = [0] * len(categorias)
+
+    for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id).all():
+        if transaccion.tipo == "gasto":
+            egresos[transaccion.fecha.weekday()] += transaccion.monto
+            totalIngreso += transaccion.monto
+        elif transaccion.tipo == "ingreso":
+            ingresos[transaccion.fecha.weekday()] += transaccion.monto
+            totalEgreso += transaccion.monto
     fig, ax = plt.subplots()
-    ax.bar(categorias, ingresos, label="Ingresos", color="green")
-    ax.bar(categorias, egresos, label="Egresos", color="red", alpha=0.7)
+
+# Ajustar la posición de las barras
+    x = range(len(categorias))  # Posiciones base para las categorías
+    ancho_barra = 0.4  # Ancho de cada barra
+
+# Dibujar las barras con un desplazamiento
+    ax.bar([pos - ancho_barra / 2 for pos in x], ingresos, width=ancho_barra, label="Ingresos", color="black")
+    ax.bar([pos + ancho_barra / 2 for pos in x], egresos, width=ancho_barra, label="Egresos",   color="red", alpha=0.7)
+
+# Ajustar etiquetas y leyenda
+    ax.set_xticks(x)
+    ax.set_xticklabels(categorias)
     ax.legend()
 
-    # Convertir gráfico de barras a HTML
+# Convertir gráfico de barras a HTML
     buf = io.BytesIO()
     plt.savefig(buf, format="png")
     buf.seek(0)
@@ -45,9 +71,15 @@ def inicio():
     buf.close()
     plt.close(fig)
 
-    # Datos para el gráfico de torta
+
+     # Datos para el gráfico de torta
     etiquetas = ["Alquiler", "Alimentos", "Transporte", "Otros"]
-    valores = [1200, 800, 400, 600]
+    valores = [
+        sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=1).all()),
+        sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=2).all()),
+        sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=3).all()),
+        sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=4).all())
+    ]
 
     fig, ax = plt.subplots()
     ax.pie(valores, labels=etiquetas, autopct="%1.1f%%")
@@ -63,6 +95,18 @@ def inicio():
     plt.close(fig)
 
     tipos_gastos = obtener_categorias()
+    saldo=Cuenta.query.filter_by(id_usuario=usuario_id).first().saldo
+   
+    lista_gastos = []
+    transacciones = Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto").order_by(Transaccion.fecha.desc()).limit(3).all()
+    for transaccion in transacciones:
+        categoria = TipoGasto.query.filter_by(id_tipo=transaccion.id_tipo).first().nombre_tipo
+        monto = transaccion.monto
+        lista_gastos.append({"categoria": categoria, "monto": monto})
+    
+    # Asegurarse de que la lista tenga exactamente 3 elementos
+    while len(lista_gastos) < 3:
+        lista_gastos.append({"categoria": "", "monto": 0})
 
     # Pasar la variable div_visible al template
     return render_template(
@@ -71,6 +115,12 @@ def inicio():
         grafico_barras_html=grafico_barras_html,
         grafico_torta_html=grafico_torta_html,
         tipos_gastos=tipos_gastos,
+        saldo=saldo,
+        lista_gastos=lista_gastos,
+        totalIngreso=totalIngreso,
+        totalEgreso=totalEgreso,
+        mes=meses[mes]
+        
     )
 
 
@@ -146,44 +196,6 @@ def register():
     return render_template("registro.html", error=error)
 
 
-@app.route("/mostrar", methods=["GET", "POST"])
-def mostrar():
-
-    if request.method == "POST":
-        # Recuperamos los datos del formulario
-        monto = request.form["amount"]
-        descripcion = request.form["description"]
-        categoria = request.form["category"]
-
-        # Obtener el usuario de la sesión
-        if "usuario_id" in session:
-            usuario_id = session["usuario_id"]
-
-            # Obtener la cuenta y tipo de gasto asociados al usuario
-            cuenta = Cuenta.query.filter_by(id_usuario=usuario_id).first()
-            # tipo_gasto = TipoGasto.query.filter_by(id_tipo=categoria).first()
-            # tipos_gasto = TipoGasto.query.all()
-
-    # Recuperamos el saldo y otros datos para mostrar en la plantilla
-    usuario = Usuario.query.filter_by(id_usuario=session.get("usuario_id")).first()
-    cuentas = Cuenta.query.filter_by(id_usuario=session.get("usuario_id")).all()
-    transacciones = Transaccion.query.filter_by(
-        id_usuario=session.get("usuario_id")
-    ).all()
-
-    # Calcular saldo disponible, ingresos y egresos
-    saldo_disponible = sum(cuenta.saldo for cuenta in cuentas)
-    ingresos = sum(t.monto for t in transacciones if t.tipo == "ingreso")
-    egresos = sum(t.monto for t in transacciones if t.tipo == "gasto")
-
-    return render_template(
-        "inicio.html",
-        usuario=usuario.nombre,
-        saldo_disponible=saldo_disponible,
-        ingresos=ingresos,
-        egresos=egresos,
-    )
-
 
 @app.route("/ingresos")
 def ingresos():
@@ -202,7 +214,9 @@ def agregar_gasto():
         # Asegúrate de que el usuario esté logueado
         if "usuario_id" in session:
             usuario_id = session["usuario_id"]
-            idCuenta=Cuenta.query.filter_by(id_usuario=usuario_id).first().id_cuenta   
+            idCuenta=Cuenta.query.filter_by(id_usuario=usuario_id).first().id_cuenta
+            
+        
             # Crear la nueva transacción de gasto
             nueva_transaccion = Transaccion(
                 id_usuario=usuario_id,
@@ -212,7 +226,9 @@ def agregar_gasto():
                 tipo="gasto",  # O ajusta según corresponda
                 id_tipo=tipo_gasto,  # Asegúrate de que tipo_gasto sea el ID de un tipo válido
             )
-
+            
+            montonuevo = float(Cuenta.query.filter_by(id_usuario=usuario_id).first().saldo) - float(monto)
+            db.session.query(Cuenta).filter_by(id_usuario=usuario_id).update({"saldo": montonuevo})
             db.session.add(nueva_transaccion)
             db.session.commit()
 

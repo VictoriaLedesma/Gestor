@@ -12,10 +12,11 @@
                     mensuales</strong></p>
         </div>
         <div class="summary-center-dashboard">
-            <div class="available-amount-dashboard"><strong>Disponible: ${{ saldo_disponible }}</strong></div>
+            <div class="available-amount-dashboard"><strong>Disponible: ${{ saldo }}</strong></div>
             <div class="monthly-stats-dashboard">
-                <div><strong>Ingresos mensuales: ${{ ingresos }}</strong></div>
-                <div><strong>Egresos mensuales: ${{ egresos }}</strong></div>
+                <div><strong>Ingresos de {{ mes }}: ${{ totalIngreso }}</strong></div>
+                
+                <div><strong>Egresos de {{ mes }}: ${{ totalEgreso }}</strong></div>
             </div>
         </div>
         <div class="summary-right-dashboard">
@@ -31,28 +32,23 @@
     <!-- Sección de últimos ingresos -->
     <div class="transactions-section-dashboard">
         <div class="section-header-dashboard d-flex justify-content-between align-items-center">
-            <h2 class="section-title-dashboard">Últimos ingresos</h2>
-            <a href="{{ url_for('mostrar') }}" class="ver-todo-dashboard">Ver todo</a>
+            <h2 class="section-title-dashboard">Últimos egresos</h2>
+            <a href="" class="ver-todo-dashboard">Ver todo</a>
         </div>
-        <div class="transactions-list-dashboard">
+  <div class="transactions-list-dashboard">
+        {% for gastos in lista_gastos %}
+      
             <div class="transaction-item-dashboard">
-                <span class="amount-income-dashboard">$1234</span>
-                <span class="badge bg-primary">Categoría</span>
+                <span class="amount-income-dashboard">${{ gastos.monto }}</span>
+                <span id="{{gastos.categoria}}" class="badge ">{{gastos.categoria}}</span>
             </div>
-            <div class="transaction-item-dashboard">
-                <span class="amount-income-dashboard">$1234</span>
-                <span class="badge bg-secondary">Categoría</span>
-            </div>
-            <div class="transaction-item-dashboard">
-                <span class="amount-income-dashboard">$1234</span>
-                <span class="badge bg-success">Categoría</span>
-            </div>
+    {% endfor %}
         </div>
 
         <!-- Sección de últimos egresos -->
         <div class="section-header-dashboard d-flex justify-content-between align-items-center mt-4">
-            <h2 class="section-title-dashboard">Últimos egresos</h2>
-            <a href="{{ url_for('mostrar') }}" class="ver-todo-dashboard">Ver todo</a>
+            <h2 class="section-title-dashboard">Últimos ingresos</h2>
+            <a href="" class="ver-todo-dashboard">Ver todo</a>
         </div>
         <div class="transactions-list-dashboard">
             <div class="transaction-item-dashboard">
@@ -80,7 +76,9 @@
             </button>
           </form>
         </div>
-      <div id="barra" class="grafico-barra">{{ grafico_barras_html|safe }}</div>
+      <div id="barra" class="grafico-barra">{{ grafico_barras_html|safe }}
+        
+      </div>
       <div id="torta" class="grafico-torta" style="display: none;">{{ grafico_torta_html|safe }}</div>
       </div>
     </div>
@@ -140,6 +138,23 @@
 {% endblock %} {% block scripts %}
 
 <script>
+    const categorias = document.querySelectorAll(".badge");
+    categorias.forEach(categoria => {
+        switch (categoria.id) {
+            case "Alquiler":
+                categoria.style.backgroundColor = "#3D63FF";
+                break;
+            case "Alimentos":
+                categoria.style.backgroundColor = "#D45F5F";
+                
+                break;
+            case "Transporte":
+                categoria.style.backgroundColor = "#30B9FE";
+                break;
+            default:
+                categoria.style.backgroundColor = "#38E184";
+        }
+    });
     const graficoBarras = document.getElementById("barra");
     const graficoTorta = document.getElementById("torta");
     const grafico = document.getElementById("cambiar-grafico");
