@@ -33,7 +33,7 @@
     <table class="transactions-table-ingresos">
         <thead>
             <tr>
-                <th class="text-center">Saldo</th>
+                <th class="text-center">Monto</th>
                 <th class="text-center">Categoría</th>
                  <th class="text-center">Descripcion</th>
                 <th class="text-center">Fecha</th>
@@ -111,6 +111,11 @@
 
 {% block scripts %}
 <script>const categorias = document.querySelectorAll(".badge");
+
+
+    
+
+
 
     const saldo = document.getElementById("saldo");
     if (parseFloat(saldo.textContent) < 0) {
