@@ -54,12 +54,17 @@ def inicio():
     ancho_barra = 0.4  # Ancho de cada barra
 
 # Dibujar las barras con un desplazamiento
-    ax.bar([pos - ancho_barra / 2 for pos in x], ingresos, width=ancho_barra, label="Ingresos", color="black")
-    ax.bar([pos + ancho_barra / 2 for pos in x], egresos, width=ancho_barra, label="Egresos",   color="red", alpha=0.7)
+
+    colorEgresos="#3D63FF"
+    colorIngresos="#D25AC8"
+
+    ax.bar([pos - ancho_barra / 2 for pos in x], ingresos, width=ancho_barra, label="Ingresos", color= colorIngresos)
+    ax.bar([pos + ancho_barra / 2 for pos in x], egresos, width=ancho_barra, label="Egresos",   color= colorEgresos, alpha=0.7)
 
 # Ajustar etiquetas y leyenda
     ax.set_xticks(x)
     ax.set_xticklabels(categorias)
+    ax.set_title("Transacciones de la semana")
     ax.legend()
 
 # Convertir gráfico de barras a HTML
@@ -73,17 +78,29 @@ def inicio():
 
 
      # Datos para el gráfico de torta
-    etiquetas = ["Alquiler", "Alimentos", "Transporte", "Otros"]
-    valores = [
-        sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=1).all()),
-        sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=2).all()),
-        sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=3).all()),
-        sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=4).all())
-    ]
+    import math
+    import matplotlib.pyplot as plt
 
+# Calculando los valores
+    etiquetas = ["Alquiler", "Alimentos", "Transporte", "Otros"]
+    if transacciones := Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto").all() == []:
+        valores = [25, 25, 25, 25]
+    else:
+        valores = [
+    sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=1).all()) or 0,
+    sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=2).all()) or 0,
+    sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=3).all()) or 0,
+    sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=4).all()) or 0
+]
+
+# Reemplazar NaN por 0
+
+# Crear gráfico
     fig, ax = plt.subplots()
-    ax.pie(valores, labels=etiquetas, autopct="%1.1f%%")
     ax.set_title("Distribución de Egresos")
+    colores = ["#3D63FF", "#D45F5F", "#30B9FE", "#38E184"]
+    ax.pie(valores, labels=etiquetas, autopct="%1.1f%%", colors=colores)
+    plt.show()
 
     # Convertir gráfico de torta a HTML
     buf = io.BytesIO()
@@ -98,17 +115,28 @@ def inicio():
     saldo=Cuenta.query.filter_by(id_usuario=usuario_id).first().saldo
    
     lista_gastos = []
-    transacciones = Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto").order_by(Transaccion.fecha.desc()).limit(3).all()
-    for transaccion in transacciones:
+    lista_ingresos = []
+    transacciones_gastos = Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto").order_by(Transaccion.fecha.desc()).limit(3).all()
+    transacciones_ingresos = Transaccion.query.filter_by(id_usuario=usuario_id, tipo="ingreso").order_by(Transaccion.fecha.desc()).limit(3).all()
+
+    for transaccion in transacciones_gastos:
         categoria = TipoGasto.query.filter_by(id_tipo=transaccion.id_tipo).first().nombre_tipo
         monto = transaccion.monto
         lista_gastos.append({"categoria": categoria, "monto": monto})
-    
-    # Asegurarse de que la lista tenga exactamente 3 elementos
+
+    for transaccion in transacciones_ingresos:
+        monto = transaccion.monto
+        lista_ingresos.append({"monto": monto})
+
+    # Asegurarse de que las listas tengan exactamente 3 elementos
     while len(lista_gastos) < 3:
         lista_gastos.append({"categoria": "", "monto": 0})
 
-    # Pasar la variable div_visible al template
+    while len(lista_ingresos) < 3:
+        lista_ingresos.append({"monto": 0})
+        
+
+
     return render_template(
         "inicio.html",
         usuario=session["usuario"],
@@ -116,6 +144,7 @@ def inicio():
         grafico_torta_html=grafico_torta_html,
         tipos_gastos=tipos_gastos,
         saldo=saldo,
+        lista_ingresos=lista_ingresos,
         lista_gastos=lista_gastos,
         totalIngreso=totalIngreso,
         totalEgreso=totalEgreso,
@@ -196,11 +225,55 @@ def register():
     return render_template("registro.html", error=error)
 
 
+@app.route('/detalle/<caso>', methods=["GET"])
+def detalle(caso):
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+    usuario_id = session["usuario_id"]
+    mes=datetime.datetime.now().month - 1 
+    
+    meses = [
+        "enero", "febrero", "marzo", "abril", "mayo", "junio",
+        "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+    ]
 
-@app.route("/ingresos")
-def ingresos():
-    # Aquí puedes manejar la lógica relacionada con ingresos
-    return render_template("ingresos.html")
+    totalIngreso = 0
+    totalEgreso = 0
+    lista = []  # Inicializar la variable lista
+
+    if caso == "ingresos":
+       for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="ingreso").all():
+        monto = transaccion.monto
+        lista.append({"categoria": "Ingresos", "monto": monto, "fecha": transaccion.fecha, "descripcion":"---"})
+        totalIngreso += monto
+    elif caso == "egresos":
+        for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto").all():
+            categoria = TipoGasto.query.filter_by(id_tipo=transaccion.id_tipo).first().nombre_tipo
+            monto = transaccion.monto
+            
+            lista.append({"categoria": categoria, "monto": monto, "fecha": transaccion.fecha, "descripcion": transaccion.descripcion})
+    totalEgreso = sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto").all())
+    return render_template(
+        "ingresos.html",
+        usuario=session["usuario"],
+        lista=lista,
+        mes=meses[mes],
+        totalIngreso=totalIngreso,
+        totalEgreso=totalEgreso,
+    
+    )
+
+
+
+
+
+
+    
+    return render_template("ingresos.html", lista=lista, tipo=tipo)
+
+    
+    
+    
 
 
 @app.route("/agregar_gasto", methods=["POST"])

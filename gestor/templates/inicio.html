@@ -12,7 +12,9 @@
                     mensuales</strong></p>
         </div>
         <div class="summary-center-dashboard">
-            <div class="available-amount-dashboard"><strong>Disponible: ${{ saldo }}</strong></div>
+            <div class="available-amount-dashboard">
+                <strong>Disponible: $<span id="saldo">{{ saldo }}</span></strong>
+            </div>
             <div class="monthly-stats-dashboard">
                 <div><strong>Ingresos de {{ mes }}: ${{ totalIngreso }}</strong></div>
                 
@@ -33,13 +35,14 @@
     <div class="transactions-section-dashboard">
         <div class="section-header-dashboard d-flex justify-content-between align-items-center">
             <h2 class="section-title-dashboard">Últimos egresos</h2>
-            <a href="" class="ver-todo-dashboard">Ver todo</a>
+            <a href="{{ url_for('detalle', caso='egresos') }}" class="ver-todo-dashboard">Ver todo</a>
+
         </div>
   <div class="transactions-list-dashboard">
         {% for gastos in lista_gastos %}
       
             <div class="transaction-item-dashboard">
-                <span class="amount-income-dashboard">${{ gastos.monto }}</span>
+                <span class="amount-income-dashboard" style="color:red">${{ gastos.monto }}</span>
                 <span id="{{gastos.categoria}}" class="badge ">{{gastos.categoria}}</span>
             </div>
     {% endfor %}
@@ -48,21 +51,16 @@
         <!-- Sección de últimos egresos -->
         <div class="section-header-dashboard d-flex justify-content-between align-items-center mt-4">
             <h2 class="section-title-dashboard">Últimos ingresos</h2>
-            <a href="" class="ver-todo-dashboard">Ver todo</a>
+            <a href="{{ url_for('detalle', caso='ingresos') }}" class="ver-todo-dashboard">Ver todo</a>
+
         </div>
         <div class="transactions-list-dashboard">
+        {% for ingresos in lista_ingresos %}
             <div class="transaction-item-dashboard">
-                <span class="amount-expense-dashboard">$1234</span>
-                <span class="badge bg-primary">Categoría</span>
+                <span class="amount-expense-dashboard" style="color:var(--success-color-dashboard)">${{ ingresos.monto }}</span>
+                <span class="badge">Ingreso</span>
             </div>
-            <div class="transaction-item-dashboard">
-                <span class="amount-expense-dashboard">$1234</span>
-                <span class="badge bg-secondary">Categoría</span>
-            </div>
-            <div class="transaction-item-dashboard">
-                <span class="amount-expense-dashboard">$1234</span>
-                <span class="badge bg-danger">Categoría</span>
-            </div>
+        {% endfor %}
         </div>
     </div>
 
@@ -76,9 +74,7 @@
             </button>
           </form>
         </div>
-      <div id="barra" class="grafico-barra">{{ grafico_barras_html|safe }}
-        
-      </div>
+      <div id="barra" class="grafico-barra">{{ grafico_barras_html|safe }}</div>
       <div id="torta" class="grafico-torta" style="display: none;">{{ grafico_torta_html|safe }}</div>
       </div>
     </div>
@@ -138,6 +134,15 @@
 {% endblock %} {% block scripts %}
 
 <script>
+
+
+    const saldo = document.getElementById("saldo");
+    if (parseFloat(saldo.textContent) < 0) {
+        saldo.style.color = "red";
+    } else {
+        saldo.style.color = "green";
+    }
+
     const categorias = document.querySelectorAll(".badge");
     categorias.forEach(categoria => {
         switch (categoria.id) {
@@ -151,8 +156,11 @@
             case "Transporte":
                 categoria.style.backgroundColor = "#30B9FE";
                 break;
-            default:
+            case "Otros":
                 categoria.style.backgroundColor = "#38E184";
+                break;
+            default:
+                categoria.style.backgroundColor = "#D25AC8";
         }
     });
     const graficoBarras = document.getElementById("barra");

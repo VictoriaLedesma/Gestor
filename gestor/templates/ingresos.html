@@ -3,18 +3,20 @@
 {% block title %}Ge$tor{% endblock %}
 
 {% block content %}
+<main class="main-content-dashboard-ingresos">
 <div class="summary-card-dashboard">
     <div class="summary-content-dashboard">
         <div class="summary-left-dashboard">
-            <h1 class="greeting-title-dashboard">Bienvenido,{{ usuario }}</h1>
+            <h1 class="greeting-title-dashboard">Bienvenido, {{ usuario }}</h1>
             <p class="greeting-text-dashboard"><strong>Acá podrás visualizar un resumen<br>de tus movimientos
                     mensuales</strong></p>
         </div>
         <div class="summary-center-dashboard">
-            <div class="available-amount-dashboard"><strong>Disponible: ${{ saldo_disponible }}</strong></div>
+            <div class="available-amount-dashboard">  <strong>Disponible: $<span id="saldo">{{ saldo }}</span></strong></div>
             <div class="monthly-stats-dashboard">
-                <div><strong>Ingresos mensuales: ${{ ingresos }}</strong></div>
-                <div><strong>Egresos mensuales: ${{ egresos }}</strong></div>
+                <div><strong>Ingresos de {{ mes }}: ${{ totalIngreso }}</strong></div>
+                
+                <div><strong>Egresos de {{ mes }}: ${{ totalEgreso }}</strong></div>
             </div>
         </div>
         <div class="summary-right-dashboard">
@@ -31,20 +33,26 @@
     <table class="transactions-table-ingresos">
         <thead>
             <tr>
-                <th>Saldo</th>
-                <th>Categoría</th>
-                <th>Fecha</th>
+                <th class="text-center">Saldo</th>
+                <th class="text-center">Categoría</th>
+                 <th class="text-center">Descripcion</th>
+                <th class="text-center">Fecha</th>
+               
             </tr>
         </thead>
-        <tbody>
-           
-        {% for ingreso in ingresos_list %}
-        <tr>
-            <td class="amount-ingresos">${{ ingreso.amount }}</td>
-            <td><span class="category-badge-ingresos category-{{ ingreso.category }}">{{ ingreso.category_name }}</span></td>
-            <td>{{ ingreso.date }}</td>
-        </tr>
+        <tbody >
+
+            {% for transaccion in lista %}
+            <tr>
+                <td class="amount-ingresos text-center">${{ transaccion.monto }}</td>
+                <td class="text-center"><span id="{{transaccion.categoria}}" class="badge">{{ transaccion.categoria }}</span></td>
+                <td class="text-center">{{ transaccion.descripcion }}</td>
+                <td class="text-center">{{ transaccion.fecha }}</td>
+            </tr>
         {% endfor %}
+
+    
+        
         </tbody>
     </table>
 </div>
@@ -109,4 +117,30 @@
         </form>
     </div>
 </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>const categorias = document.querySelectorAll(".badge");
+    categorias.forEach(categoria => {
+        switch (categoria.id) {
+            case "Alquiler":
+                categoria.style.backgroundColor = "#3D63FF";
+                
+                break;
+            case "Alimentos":
+                categoria.style.backgroundColor = "#D45F5F";
+                
+                break;
+            case "Transporte":
+                categoria.style.backgroundColor = "#30B9FE";
+                break;
+            case "Otros":
+                categoria.style.backgroundColor = "#38E184";
+                break;
+            default:
+                categoria.style.backgroundColor = "#D25AC8";
+        }
+    });</script>
+
 {% endblock %}

@@ -69,6 +69,13 @@ footer p {
     padding: 0 1rem;
 }
 
+.main-content-dashboard-ingresos {
+    max-width: 1500px;
+    width: 1500px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
 .summary-card-dashboard {
     background-color: #f3f4f6;
     padding: 2rem;
@@ -198,7 +205,7 @@ footer p {
 }
 
 .category-badge-dashboard {
-    color: white;
+    color: rgb(0, 0, 0);
     padding: 0.25rem 0.75rem;
     border-radius: 1rem;
     font-size: 0.875rem;
@@ -352,7 +359,7 @@ footer p {
 }
 
 .category-badge-ingresos {
-    color: white;
+    color: rgb(4, 2, 2);
     padding: 0.25rem 0.75rem;
     border-radius: 1rem;
     font-size: 0.875rem;
