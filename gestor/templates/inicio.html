@@ -16,9 +16,9 @@
                 <strong>Disponible: $<span id="saldo">{{ saldo }}</span></strong>
             </div>
             <div class="monthly-stats-dashboard">
-                <div><strong>Ingresos de {{ mes }}: ${{ totalIngreso }}</strong></div>
+                <div><strong>Ingresos de {{ mes }}:  ${{ totalEgreso }}</strong></div>
                 
-                <div><strong>Egresos de {{ mes }}: ${{ totalEgreso }}</strong></div>
+                <div><strong>Egresos de {{ mes }}: ${{ totalIngreso }}</strong></div>
             </div>
         </div>
         <div class="summary-right-dashboard">
@@ -67,9 +67,9 @@
     <!-- Grafico -->
     <div class="chart-section-dashboard">
         <div class="section-header-dashboard">
-          <h2 class="section-title-dashboard">Últimos egresos</h2>
+          <h2 class="section-title-dashboard">Estadisticas</h2>
           <form method="POST">
-            <button type="submit" id="cambiar-grafico" class="ver-todo-dashboard">
+            <button type="submit" id="cambiar-grafico" class="ver-todo-dashboard" style="font-size:1.2rem">
               Ver Distribución de Ingresos
             </button>
           </form>
@@ -166,16 +166,30 @@
     const graficoBarras = document.getElementById("barra");
     const graficoTorta = document.getElementById("torta");
     const grafico = document.getElementById("cambiar-grafico");
+
+    // Check local storage for the last displayed chart
+    if (localStorage.getItem("lastChart") === "torta") {
+        graficoBarras.style.display = "none";
+        graficoTorta.style.display = "block";
+        grafico.textContent = "Ver Distribución de Egresos";
+    } else {
+        graficoBarras.style.display = "block";
+        graficoTorta.style.display = "none";
+        grafico.textContent = "Ver Distribución de Ingresos";
+    }
+
     grafico.addEventListener("click", (e) => {
         e.preventDefault();
         if (grafico.textContent === "Ver Distribución de Ingresos") {
             graficoBarras.style.display = "none";
             graficoTorta.style.display = "block";
             grafico.textContent = "Ver Distribución de Egresos";
+            localStorage.setItem("lastChart", "torta");
         } else {
             graficoBarras.style.display = "block";
             graficoTorta.style.display = "none";
             grafico.textContent = "Ver Distribución de Ingresos";
+            localStorage.setItem("lastChart", "barras");
         }
     });
 

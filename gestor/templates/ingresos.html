@@ -12,7 +12,7 @@
                     mensuales</strong></p>
         </div>
         <div class="summary-center-dashboard">
-            <div class="available-amount-dashboard">  <strong>Disponible: $<span id="saldo">{{ saldo }}</span></strong></div>
+            <div class="available-amount-dashboard">  <strong>Disponible: $<span id="saldo">{{ disponible }}</span></strong></div>
             <div class="monthly-stats-dashboard">
                 <div><strong>Ingresos de {{ mes }}: ${{ totalIngreso }}</strong></div>
                 
@@ -64,54 +64,43 @@
             <h2 class="modal-title-expenses">Agregar gasto</h2>
             <a href="#" class="modal-close-expenses">✕</a>
         </div>
-        <form method="post" action="" class="modal-form-expenses">
+        <form method="post" action="{{ url_for('agregar_gasto') }}" class="modal-form-expenses">
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Monto</strong></label>
-                <input type="number" name="amount" class="form-input-expenses" placeholder="Ingrese el monto" required>
+                <input type="number" name="monto" class="form-input-expenses" placeholder="Ingrese el monto" required>
             </div>
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Categoría</strong></label>
                 <div class="select-wrapper-expenses">
-                    <select name="category" class="form-select-expenses" required>
+                    <select name="categoria" class="form-select-expenses" required>
                         <option value="" disabled selected>Seleccione una categoría</option>
-                        <option value="1">Categoría 1</option>
-                        <option value="2">Categoría 2</option>
-                        <option value="3">Categoría 3</option>
+                        {% for tipo in tipos_gastos %}
+                            <option value="{{ tipo.id_tipo }}">{{ tipo.nombre_tipo }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Descripción</strong></label>
-                <textarea name="description" class="form-textarea-expenses"
-                    placeholder="Ingrese una descripción"></textarea>
+                <textarea name="descripcion" class="form-textarea-expenses" placeholder="Ingrese una descripción"></textarea>
             </div>
             <button type="submit" class="submit-button-expenses">Ingresar</button>
         </form>
-    </div>
+</div>
+
 </div>
 
 <!-- Form Editar Ingresos -->
 <div class="modal-expenses" id="modal-edit-income">
     <div class="modal-content-expenses">
         <div class="modal-header-expenses">
-            <h2 class="modal-title-expenses">Editar ingresos</h2>
+            <h2 class="modal-title-expenses">Agregar ingresos</h2>
             <a href="#" class="modal-close-expenses">✕</a>
         </div>
-        <form method="post" action="" class="modal-form-expenses">
+        <form method="post" action="{{ url_for('agregar_ingreso') }}" class="modal-form-expenses">
             <div class="form-group-expenses">
                 <label class="form-label-expenses"><strong>Monto</strong></label>
-                <input type="number" name="amount" class="form-input-expenses" placeholder="Ingrese el monto" required>
-            </div>
-            <div class="form-group-expenses">
-                <label class="form-label-expenses"><strong>Categoría</strong></label>
-                <div class="select-wrapper-expenses">
-                    <select name="category" class="form-select-expenses" required>
-                        <option value="" disabled selected>Seleccione una categoría</option>
-                        <option value="1">Categoría 1</option>
-                        <option value="2">Categoría 2</option>
-                        <option value="3">Categoría 3</option>
-                    </select>
-                </div>
+                <input type="number" name="monto" class="form-input-expenses" placeholder="Ingrese el monto" required>
             </div>
             <button type="submit" class="submit-button-expenses">Ingresar</button>
         </form>
@@ -122,6 +111,13 @@
 
 {% block scripts %}
 <script>const categorias = document.querySelectorAll(".badge");
+
+    const saldo = document.getElementById("saldo");
+    if (parseFloat(saldo.textContent) < 0) {
+        saldo.style.color = "red";
+    } else {
+        saldo.style.color = "green";
+    }
     categorias.forEach(categoria => {
         switch (categoria.id) {
             case "Alquiler":

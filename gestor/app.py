@@ -84,7 +84,7 @@ def inicio():
 # Calculando los valores
     etiquetas = ["Alquiler", "Alimentos", "Transporte", "Otros"]
     if transacciones := Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto").all() == []:
-        valores = [25, 25, 25, 25]
+        valores = [0,0,0,0]
     else:
         valores = [
     sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=1).all()) or 0,
@@ -92,6 +92,11 @@ def inicio():
     sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=3).all()) or 0,
     sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto", id_tipo=4).all()) or 0
 ]
+        
+    # Eliminar posiciones con valor 0 o vacías
+    etiquetas = [etiqueta for etiqueta, valor in zip(etiquetas, valores) if valor != 0 and valor != ""]
+    
+    valores = [valor for valor in valores if valor != 0 and valor != ""]
 
 # Reemplazar NaN por 0
 
@@ -240,26 +245,34 @@ def detalle(caso):
     totalIngreso = 0
     totalEgreso = 0
     lista = []  # Inicializar la variable lista
-
+    tipos_gastos = obtener_categorias()
     if caso == "ingresos":
        for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="ingreso").all():
         monto = transaccion.monto
         lista.append({"categoria": "Ingresos", "monto": monto, "fecha": transaccion.fecha, "descripcion":"---"})
-        totalIngreso += monto
+        
     elif caso == "egresos":
         for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto").all():
             categoria = TipoGasto.query.filter_by(id_tipo=transaccion.id_tipo).first().nombre_tipo
+            if transaccion.descripcion == "":
+                descripcion = "---"
+            else:
+                descripcion = transaccion.descripcion
+                categoria = "Sin categoría"
             monto = transaccion.monto
             
-            lista.append({"categoria": categoria, "monto": monto, "fecha": transaccion.fecha, "descripcion": transaccion.descripcion})
+            lista.append({"categoria": categoria, "monto": monto, "fecha": transaccion.fecha, "descripcion": descripcion})
     totalEgreso = sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="gasto").all())
+    totalIngreso = sum(transaccion.monto for transaccion in Transaccion.query.filter_by(id_usuario=usuario_id, tipo="ingreso").all())
     return render_template(
         "ingresos.html",
         usuario=session["usuario"],
         lista=lista,
         mes=meses[mes],
         totalIngreso=totalIngreso,
+        tipos_gastos=tipos_gastos,
         totalEgreso=totalEgreso,
+        disponible=totalIngreso-totalEgreso
     
     )
 
@@ -306,9 +319,7 @@ def agregar_gasto():
             db.session.commit()
 
             flash("Gasto agregado correctamente.")
-            return redirect(
-                url_for("inicio")
-            )  # Redirigir al inicio después de agregar el gasto
+            return redirect(request.referrer or url_for("inicio"))  # Redirigir al inicio después de agregar el gasto
 
     # Si el método es GET, solo mostrar el formulario (no hay tal formulario, es un modal, revisar)
     # return render_template('agregar_gasto.html')
@@ -337,9 +348,7 @@ def agregar_ingreso():
             db.session.commit()
 
             flash("Ingreso agregado correctamente.")
-            return redirect(
-                url_for("inicio")
-            )  # Redirigir al inicio después de agregar el gasto
+            return redirect(request.referrer or url_for("inicio")) # Redirigir al inicio después de agregar el gasto
 
 
 @app.route("/logout")
