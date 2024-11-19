@@ -117,7 +117,7 @@ def inicio():
     plt.close(fig)
 
     tipos_gastos = obtener_categorias()
-    saldo=Cuenta.query.filter_by(id_usuario=usuario_id).first().saldo
+    
    
     lista_gastos = []
     lista_ingresos = []
@@ -148,11 +148,11 @@ def inicio():
         grafico_barras_html=grafico_barras_html,
         grafico_torta_html=grafico_torta_html,
         tipos_gastos=tipos_gastos,
-        saldo=saldo,
         lista_ingresos=lista_ingresos,
         lista_gastos=lista_gastos,
         totalIngreso=totalIngreso,
         totalEgreso=totalEgreso,
+        disponible=totalEgreso-totalIngreso,
         mes=meses[mes]
         
     )
